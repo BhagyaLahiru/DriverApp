@@ -1,0 +1,39 @@
+cro{
+  "project_info": {
+    "project_number": "458643525972",
+    "project_id": "my-dirver-app",
+    "storage_bucket": "my-dirver-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:458643525972:android:e6e8abdbbb7637cd0f38c1",
+        "android_client_info": {
+          "package_name": "com.bhagyalahiru.delevaryapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "458643525972-1f92ueis9b9cgf6h0bka75hhjroig8bf.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAhT05nooV6FhYyHvRokWgVCvdTTwwTPwg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "458643525972-1f92ueis9b9cgf6h0bka75hhjroig8bf.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

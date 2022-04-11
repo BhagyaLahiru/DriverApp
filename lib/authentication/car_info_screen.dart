@@ -1,5 +1,9 @@
+import 'package:delevary_app/global/global.dart';
+import 'package:delevary_app/splashScreen/splash_screen.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class CarInfoScreen extends StatefulWidget {
   const CarInfoScreen({Key? key}) : super(key: key);
@@ -16,6 +20,25 @@ class _CarInfoScreenState extends State<CarInfoScreen> {
 
   List<String> carTypesList = ["uber-x", "uber-go", "bike"];
   String? selectedCarType;
+
+  saveCarInfo() {
+    Map driverCarInfoMap = {
+      "car_color": carColorTextEditingController.text.trim(),
+      "car_number": carNumberTextEditingController.text.trim(),
+      "car_model": carModelTextEditingController.text.trim(),
+      "type": selectedCarType,
+    };
+    DatabaseReference driverRef =
+        FirebaseDatabase.instance.ref().child("drivers");
+    driverRef
+        .child(currentFirebaseUser!.uid)
+        .child("car_details")
+        .set(driverCarInfoMap);
+
+    Fluttertoast.showToast(msg: "Car Details has been saved, Congratulation.");
+          Navigator.push(
+          context, MaterialPageRoute(builder: (c) => const MySplashScreen()));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +63,6 @@ class _CarInfoScreenState extends State<CarInfoScreen> {
               "Write Car Details",
               style: TextStyle(),
             ),
-            
             TextField(
               controller: carModelTextEditingController,
               style: const TextStyle(color: Colors.grey),
@@ -98,8 +120,9 @@ class _CarInfoScreenState extends State<CarInfoScreen> {
                 ),
               ),
             ),
-            
-            const SizedBox(height: 20,),
+            const SizedBox(
+              height: 20,
+            ),
             DropdownButton(
               iconSize: 26,
               dropdownColor: Colors.black,
@@ -123,12 +146,19 @@ class _CarInfoScreenState extends State<CarInfoScreen> {
                 );
               }).toList(),
             ),
-
-          const SizedBox(height: 20,),
-                     ElevatedButton(
+            const SizedBox(
+              height: 20,
+            ),
+            ElevatedButton(
                 onPressed: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (c) => const CarInfoScreen()));
+                  // Navigator.push(context,
+                  //     MaterialPageRoute(builder: (c) => const CarInfoScreen()));
+                  if (carColorTextEditingController.text.isNotEmpty &&
+                      carNumberTextEditingController.text.isNotEmpty &&
+                      carModelTextEditingController.text.isNotEmpty &&
+                      selectedCarType != null) {
+                    saveCarInfo();
+                  }
                 },
                 style:
                     ElevatedButton.styleFrom(primary: Colors.lightGreenAccent),
@@ -139,7 +169,6 @@ class _CarInfoScreenState extends State<CarInfoScreen> {
                     fontSize: 18,
                   ),
                 ))
-   
           ],
         ),
       )),

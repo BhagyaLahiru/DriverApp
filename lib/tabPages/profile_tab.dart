@@ -1,9 +1,10 @@
-
-
+import 'package:delevary_app/global/global.dart';
+import 'package:delevary_app/splashScreen/splash_screen.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
 class ProfileTabPage extends StatefulWidget {
-  const ProfileTabPage({ Key? key }) : super(key: key);
+  const ProfileTabPage({Key? key}) : super(key: key);
 
   @override
   State<ProfileTabPage> createState() => _ProfileTabPageState();
@@ -12,8 +13,18 @@ class ProfileTabPage extends StatefulWidget {
 class _ProfileTabPageState extends State<ProfileTabPage> {
   @override
   Widget build(BuildContext context) {
-   return Center(
-      child: Text("Profile"),
+    return Center(
+      child: ElevatedButton(
+        child: const Text(
+          "Sign Out",
+        ),
+        onPressed: () {
+          fAuth.signOut();
+                Navigator.push(
+            context, MaterialPageRoute(builder: (c) => const MySplashScreen()));
+      
+        },
+      ),
     );
   }
 }

@@ -9,10 +9,15 @@ import 'package:flutter/material.dart';
 import 'mainScreens/main_screen.dart';
 
 void main() async {
-  // WidgetsFlutterBinding.ensureInitialized();
-  // await Firebase.initializeApp(
-  //   options: DefaultFirebaseOptions.currentPlatform
-  // );
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+      options: const FirebaseOptions(
+      apiKey: "AIzaSyAu7OWfMz_58RajKSE5LsGqZewlGwvuMvM", // Your apiKey
+      appId: "1:458643525972:android:e6e8abdbbb7637cd0f38c1", // Your appId
+      messagingSenderId: "XXX", // Your messagingSenderId
+      projectId: "my-dirver-app", // Your projectId
+    ),
+  );
   runApp(MyApp(
     child: MaterialApp(
       title: 'Drivers App',

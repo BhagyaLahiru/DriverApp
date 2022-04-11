@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:delevary_app/authentication/login_screen.dart';
+import 'package:delevary_app/global/global.dart';
 import 'package:delevary_app/mainScreens/main_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -16,11 +18,18 @@ class MySplashScreen extends StatefulWidget {
 class _MySplashScreenState extends State<MySplashScreen> {
   startTimer() {
     Timer(const Duration(seconds: 3), () async {
-      Navigator.push(
-          context, MaterialPageRoute(builder: (c) =>  SignUpScreen()));
+      if (await fAuth.currentUser != null) {
+        currentFirebaseUser = fAuth.currentUser;
+        Navigator.push(
+            context, MaterialPageRoute(builder: (c) => const MainScreen()));
+      } else {
+        Navigator.push(context,
+            MaterialPageRoute(builder: (c) => const LoginScreenState()));
+      }
     });
   }
-@override
+
+  @override
   void initState() {
     super.initState();
     startTimer();

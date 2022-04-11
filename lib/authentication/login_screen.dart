@@ -1,6 +1,12 @@
 import 'package:delevary_app/authentication/signup_screen.dart';
+import 'package:delevary_app/splashScreen/splash_screen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+
+import '../global/global.dart';
+import '../widgets/progress_dialog.dart';
 
 class LoginScreenState extends StatefulWidget {
   const LoginScreenState({Key? key}) : super(key: key);
@@ -10,10 +16,51 @@ class LoginScreenState extends StatefulWidget {
 }
 
 class _LoginScreenStateState extends State<LoginScreenState> {
+  TextEditingController emailTextEditingController = TextEditingController();
+  TextEditingController passwordTextEditingController = TextEditingController();
 
-    TextEditingController emailTextEditingController = TextEditingController();
-    TextEditingController passwordTextEditingController = TextEditingController();
- 
+  validateForm() {
+    if (!emailTextEditingController.text.contains("@")) {
+      Fluttertoast.showToast(msg: "Email address is not Valid.");
+    } else if (passwordTextEditingController.text.isEmpty) {
+      Fluttertoast.showToast(msg: "Password is required.");
+    } else {
+      loginDriverNow();
+    }
+  }
+
+  loginDriverNow() async {
+    showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext c) {
+          return ProgressDialog(
+            message: "Processing, Please wait...",
+          );
+        });
+
+    final User? firebaseUser = (await fAuth
+            .signInWithEmailAndPassword(
+      email: emailTextEditingController.text.trim(),
+      password: passwordTextEditingController.text.trim(),
+    )
+            .catchError((msg) {
+      Navigator.pop(context);
+      Fluttertoast.showToast(msg: "Error: " + msg.toString());
+    }))
+        .user;
+
+    if (firebaseUser != null) {
+      currentFirebaseUser = firebaseUser;
+      Fluttertoast.showToast(msg: "Login Successful");
+      Navigator.push(
+          context, MaterialPageRoute(builder: (c) => const MySplashScreen()));
+    } else {
+      Navigator.pop(context);
+      Fluttertoast.showToast(msg: "Error Occurred during Login.");
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -40,12 +87,11 @@ class _LoginScreenStateState extends State<LoginScreenState> {
                     color: Colors.grey,
                     fontWeight: FontWeight.bold),
               ),
-
-                        TextField(
+              TextField(
                 controller: emailTextEditingController,
                 keyboardType: TextInputType.emailAddress,
                 style: const TextStyle(color: Colors.grey),
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   labelText: "Email",
                   hintText: "Email",
                   enabledBorder: UnderlineInputBorder(
@@ -61,12 +107,12 @@ class _LoginScreenStateState extends State<LoginScreenState> {
                   ),
                 ),
               ),
-                      TextField(
+              TextField(
                 controller: passwordTextEditingController,
                 keyboardType: TextInputType.text,
                 obscureText: true,
                 style: const TextStyle(color: Colors.grey),
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   labelText: "Password",
                   hintText: "Password",
                   enabledBorder: UnderlineInputBorder(
@@ -82,12 +128,12 @@ class _LoginScreenStateState extends State<LoginScreenState> {
                   ),
                 ),
               ),
-
-                 const SizedBox(
+              const SizedBox(
                 height: 20,
               ),
-            ElevatedButton(
+              ElevatedButton(
                 onPressed: () {
+                  validateForm();
                   // Navigator.push(context,
                   //     MaterialPageRoute(builder: (c) => const CarInfoScreen()));
                 },
@@ -99,17 +145,18 @@ class _LoginScreenStateState extends State<LoginScreenState> {
                     color: Colors.black54,
                     fontSize: 18,
                   ),
-                ),),
-          
-          TextButton(child: const Text("Do not have an Account? Login Here",
-style: TextStyle(color: Colors.grey),
-          ),
-          onPressed: (){
-               Navigator.push(context,
-                      MaterialPageRoute(builder: (c) =>  SignUpScreen()));
-          },
-          ),
-
+                ),
+              ),
+              TextButton(
+                child: const Text(
+                  "Do not have an Account? Login Here",
+                  style: TextStyle(color: Colors.grey),
+                ),
+                onPressed: () {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (c) => SignUpScreen()));
+                },
+              ),
             ],
           ),
         ),
